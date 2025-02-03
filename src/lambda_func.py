@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     result_encoded=result.encode('utf-8')
 
     bucket_name = 'decsprintbucket'
-    file_name = 'sprintrandomfile.txt'
+    file_name = f"sprintrandomfile{datetime.now()}.txt"
     s3 = boto3.resource('s3')
     s3.Bucket(bucket_name).put_object(Key=file_name,Body=result_encoded)
     pass
