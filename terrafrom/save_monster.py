@@ -1,10 +1,11 @@
-import requests
+import urllib3
 import logging
+import boto3
 
-def lamda_handler(event,context):
+def lambda_handler(event,context):
 
-    name = event["monster"]
-    url = f"https://www.dnd5eapi.co/api/monsters/{name}"
+    index = event["monster"]
+    url = f"https://www.dnd5eapi.co/api/monsters/{index}"
 
 
     payload = {}
@@ -13,11 +14,13 @@ def lamda_handler(event,context):
         }
 
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+    response = urllib3.request("GET", url)
 
     if response:
-        #write to s3 bucket
-        pass
+        bucket_name = "la-random-bucket-12345"
+        file_name = f"monster-{index}.txt"
+        s3 = boto3.resource('s3')
+        s3.Bucket(bucket_name).put_object(Key=file_name,Body=response.data)
     else:
         #log to cloud watch
         pass
@@ -27,7 +30,3 @@ def lamda_handler(event,context):
     file_handler.setFormatter(formatter)
     sprint_logger.addHandler(file_handler)
     sprint_logger.setLevel(logging.DEBUG)
-    
-    #print(response.text)
-
-    pass
