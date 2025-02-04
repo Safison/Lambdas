@@ -9,7 +9,7 @@ data "archive_file" "lambda"{
 resource "aws_lambda_function" "save_monster" {
     filename = data.archive_file.lambda.output_path
     function_name = "sprint_monster"
-    role = aws_iam_role.monster_role.arn
+    role = aws_iam_role.iam-for-lambda-role.arn
     handler = "save_monster.lambda_handler"
     runtime = "python3.13"
 }
